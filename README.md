@@ -13,4 +13,5 @@ The code used to built the shiny app is deployed in app.R and help.R files.
 |:---------:|:-------:|
 |Thesis' Code _ Submission.R|Code used to run the regressions and deal with the datasets|
 |app.R      | Code used to build the shiny application|
-|help.R     | sources for the shiny application (functions and data) |
+|help.R     | Sources for the shiny application (functions and data) |
+|Shiny app  |  [https://gabrielebonvicini.shinyapps.io/trade_cost_analysis/](https://gabrielebonvicini.shinyapps.io/trade_cost_analysis/ "SHINY APP") |
