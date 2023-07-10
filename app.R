@@ -1,10 +1,6 @@
 ##To call the functions and data needed within the application 
 source("help.R")
 
-
-#### write here all the necessary functions and data #### 
-
-
 #Section 1: Shiny application -----------------------------------------------------
 
 ##In this section a Shiny application to automatize the results will be created
