@@ -132,11 +132,13 @@ server <- function(input, output){
     ##End of renderUI() (table output)
   })
   
-  ##3 Plot Output 
+  ##3 Output Plot 
   output$Output_plot <- renderPlot({
     ##3.1 Again if comaprison upper/lower is selected, more plots are needed 
     if(input$quartile == "comparison lower/upper"){
+      
       par(mfrow = c(2,2)) #four charts
+      par(mar = c(5,4,4,5) + 0.5) #wider margins
       
       ##3.2 Image of the cumulated transaction costs and returns
       df1 <- trade_analysis("lower" , pillar = input$pillar)
@@ -176,34 +178,56 @@ server <- function(input, output){
                             tryFormats = "%d/%m/%Y" ) #the x_axes need to be of a date format
       
       ##3.6 Plot the lower quartile 
-      ##Scatter plot of transaction costs 
-      plot(df1$tcost_perce[,1]*100, x = date_axes, xaxt = "n" , yaxt = "n" , 
+      ##Scatter plot of REturns 
+      plot(df1$returns_perce[,1]*100, x = date_axes, xaxt = "n" , yaxt = "n" , 
            #xaxt = "n" -- > do not show x-axis
            ylim = c(-10,10), cex = 0.3, pch = 20, #pch = 20 -- > fulld dots 
-           xlab =  "Dates", ylab = "percentage") 
-      ##Scatter plot of returns
-      points(y = df1$returns_perce[,1]*100, x = date_axes, col = "red", cex = 0.3, pch = 20)  
-      ##Legend
-      legend("topright", legend = c("Costs", "Returns"), col = c("black", "red"),pch = 20)
+           xlab =  "Dates", ylab = "Returns (%)",
+           col = "#288ba8") #returns
       
-      ##3.7 Fix the axes 
-      ##The x-axix (1)
+      ##Set the x-axis (1) -- > Date
       axis.Date(1, at = seq(date_axes[1], date_axes[length(date_axes)] , "6 months") ,  
                 labels = T, format = "%m/%Y", tcl = -0.5) #add an axes with dates 
+      
+      ##Set the y-axis (2) -- > Returns
       ##The y-xis (2) 
       axis(2, at = seq(-10,10,by = 1), labels = F )  
       axis(2, at = seq(-10,10,by = 2), labels = paste0(seq(-10,10,by = 2) , "%"), las = 1 ) 
-      #las = 1 -- > show horizontally                           
+      #las = 1 -- > show horizontally 
+      
+      ##allow a new plot
+      par(new = T)
+      
+      ##Scatter plot of transaction costs
+      plot(y = df1$tcost_percentage[,1], x = date_axes,
+             ylim = c(-0.2,0.2), xlab = "" , ylab = "",
+             xaxt = "n" , yaxt = "n", 
+             col = "red", cex = 0.3, pch = 20)  
+      
+      axis(4, at = seq(-0.2 , 0.2 , 0.05) , labels = paste0( seq(-0.2 , 0.2 , 0.05) , "%"), 
+           las = 1 , col= "red"  , col.axis = "red" )
+      
+      ##New ylabel (costs)
+      mtext("Costs (%)", side =  4, 
+            line = 3.8, col = "red")  #source: https://stackoverflow.com/questions/6142944/how-can-i-plot-with-2-different-y-axes
+      
+      ##add a legend
+      legend("topright", legend = c("Returns", "Costs"), col = c("#288ba8", "red"),
+             pch = 20,) #pch = 20 -- > full dots
+      
       
       ##3.8 Plot line of cumulated rets   
       plot(x = date_axes, y = cumu_sum_ret, type = "l", xaxt = "n", yaxt = "n" ,  
-           ylim = c(-50,50), ylab = "percentage", xlab = "Dates") 
+           ylim = c(-50,50), ylab = "Returns (%)", xlab = "Dates",
+           col ="#288ba8" ) 
+      
       ##x-axis (1)
       axis.Date(1, at = seq(date_axes[1], date_axes[length(date_axes)] , "6 months") , 
                 labels = T, format = "%m/%Y", tcl = -0.5) #add an axes with dates 
+      
       ##Legend
       legend("topright", legend = c( "Cumulative returns"), 
-             col = c("black"), lwd = 2)
+             col = c("#288ba8"), lwd = 2)
       
       ##y-axis (2)
       axis(2, at =  seq(-50,50, by = 10), labels = paste0( seq(-50,50, by = 10) , "%") , 
@@ -214,38 +238,59 @@ server <- function(input, output){
              outer = T, line = -1) #line = -1 -- > above the first two charts
       
       ##3.9 Do the same for the upper quartile
+      ##Scatter plot of REturns 
+      plot(df2$returns_perce[,1]*100, x = date_axes, xaxt = "n" , yaxt = "n" , 
+           #xaxt = "n" -- > do not show x-axis
+           ylim = c(-10,10), cex = 0.3, pch = 20, #pch = 20 -- > fulld dots 
+           xlab =  "Dates", ylab = "Returns (%)",
+           col = "#288ba8") #returns
       
-      ##Scatter plot of returns and transaction costs
-      ##Transaction costs
-      plot(df2$tcost_perce[,1]*100, x = date_axes, xaxt = "n" , yaxt = "n" ,  
-           ylim = c(-10,10), cex = 0.3, pch = 20,
-           xlab =  "Dates", ylab = "percentage" ) 
-      #Returns 
-      points(y = df2$returns_perce[,1]*100, x = date_axes, col = "red", cex = 0.3, pch = 20)
-      ##Legend
-      legend("topright", legend = c("Costs", "Returns"), col = c("black", "red"), pch = 20)
-      
-      #x-axis (1)
-      axis.Date(1, at = seq(date_axes[1], date_axes[length(date_axes)] , "6 months") , 
+      ##Set the x-axis (1) -- > Date
+      axis.Date(1, at = seq(date_axes[1], date_axes[length(date_axes)] , "6 months") ,  
                 labels = T, format = "%m/%Y", tcl = -0.5) #add an axes with dates 
-      ##y-axis (2)
+      
+      ##Set the y-axis (2) -- > Returns
+      ##The y-xis (2) 
       axis(2, at = seq(-10,10,by = 1), labels = F )  
-      axis(2, at = seq(-10,10,by = 2), labels = paste0(seq(-10,10,by = 2) , "%"), las = 1 )
+      axis(2, at = seq(-10,10,by = 2), labels = paste0(seq(-10,10,by = 2) , "%"), las = 1 ) 
+      #las = 1 -- > show horizontally 
       
-      ##Line showing cumulated returns 
-      ##Line chart
+      ##allow a new plot
+      par(new = T)
+      
+      ##Scatter plot of transaction costs
+      plot(y = df2$tcost_percentage[,1], x = date_axes,
+             ylim = c(-0.2,0.2), xlab = "" , ylab = "",
+             xaxt = "n" , yaxt = "n", 
+             col = "red", cex = 0.3, pch = 20)  
+      
+      axis(4, at = seq(-0.2 , 0.2 , 0.05) , labels = paste0( seq(-0.2 , 0.2 , 0.05) , "%"), 
+           las = 1 , col= "red"  , col.axis = "red" )
+      
+      ##New ylabel (costs)
+      mtext("Costs (%)", side =  4, 
+            line = 3.8, col = "red")  #source: https://stackoverflow.com/questions/6142944/how-can-i-plot-with-2-different-y-axes
+      
+      ##add a legend
+      legend("topright", legend = c("Returns", "Costs"), col = c("#288ba8", "red"),
+             pch = 20,) #pch = 20 -- > full dots
+      
+      ##3.8 Plot line of cumulated rets   
       plot(x = date_axes, y = cumu_sum_ret2, type = "l", xaxt = "n", yaxt = "n" ,  
-           ylim = c(-50,50), ylab = "percentage", xlab = "Dates") #costs
-      ##x-axis 
+           ylim = c(-50,50), ylab = "Returns (%)", xlab = "Dates",
+           col ="#288ba8" ) 
+      
+      ##x-axis (1)
       axis.Date(1, at = seq(date_axes[1], date_axes[length(date_axes)] , "6 months") , 
                 labels = T, format = "%m/%Y", tcl = -0.5) #add an axes with dates 
-      ##Legend
-      legend("topright", legend = c("Cumulative returns"), 
-             col = c("black"), lwd = 2)
       
-      ##y-axis (2) 
+      ##Legend
+      legend("topright", legend = c( "Cumulative returns"), 
+             col = c("#288ba8"), lwd = 2)
+      
+      ##y-axis (2)
       axis(2, at =  seq(-50,50, by = 10), labels = paste0( seq(-50,50, by = 10) , "%") , 
-           las = 1) #to write horizontally  
+           las = 1)  
       
       ##Add a title  
       title( paste0(input$pillar, " ", " upper quartile portfolio" ), 
@@ -255,6 +300,8 @@ server <- function(input, output){
     ##3.10 Else (if input$quartile != comparison -- > two plots are needed instead of four)
     else  { 
       par(mfrow = c(1,2)) #two charts 
+      par(mar = c(5,4,4,5) + 0.5) #wider margins
+      
       df <- trade_analysis(quartile = input$quartile, pillar = input$pillar)
       
       ##Cumulated returns
@@ -274,27 +321,60 @@ server <- function(input, output){
       date_axes <- as.Date( colnames(prices_day)[4:length(prices_day)], 
                             tryFormats = "%d/%m/%Y" ) #the x_axes need to be of a date format
       
-      ##Scatter plot of rets and transaction costs (percentage)
-      plot(df$tcost_perce[,1]*100, x = date_axes, xaxt = "n" , yaxt = "n" ,  
-           ylim = c(-10,10), cex = 0.3, pch = 20, #costs scatter
-           xlab =  "Dates", ylab = "percentage" ) 
-      points(y = df$returns_perce[,1]*100, x = date_axes, col = "red", cex = 0.3, pch = 20) #returns 
-      legend("topright", legend = c("Costs", "Returns"), col = c("black", "red"),pch = 20)
-      ##Fix the axes
-      axis.Date(1, at = seq(date_axes[1], date_axes[length(date_axes)] , "6 months") , 
-                labels = T, format = "%m/%Y", tcl = -0.5) #add an axes with dates 
-      axis(2, at = seq(-10,10,by = 1), labels = F )  
-      axis(2, at = seq(-10,10,by = 2), labels = paste0(seq(-10,10,by = 2) , "%"), las = 1 )
+      ##Scatter plot of REturns 
+      plot(df$returns_perce[,1]*100, x = date_axes, xaxt = "n" , yaxt = "n" , 
+           #xaxt = "n" -- > do not show x-axis
+           ylim = c(-10,10), cex = 0.3, pch = 20, #pch = 20 -- > fulld dots 
+           xlab =  "Dates", ylab = "Returns (%)",
+           col = "#288ba8") #returns
       
-      ##Line cahrt with cumulated elements 
+      ##Set the x-axis (1) -- > Date
+      axis.Date(1, at = seq(date_axes[1], date_axes[length(date_axes)] , "6 months") ,  
+                labels = T, format = "%m/%Y", tcl = -0.5) #add an axes with dates 
+      
+      ##Set the y-axis (2) -- > Returns
+      ##The y-xis (2) 
+      axis(2, at = seq(-10,10,by = 1), labels = F )  
+      axis(2, at = seq(-10,10,by = 2), labels = paste0(seq(-10,10,by = 2) , "%"), las = 1 ) 
+      #las = 1 -- > show horizontally 
+      
+      ##allow a new plot
+      par(new = T)
+      
+      ##Scatter plot of transaction costs
+      plot(y = df$tcost_percentage[,1], x = date_axes,
+             ylim = c(-0.2,0.2), xlab = "" , ylab = "",
+             xaxt = "n" , yaxt = "n", 
+             col = "red", cex = 0.3, pch = 20)  
+      
+      axis(4, at = seq(-0.2 , 0.2 , 0.05) , labels = paste0( seq(-0.2 , 0.2 , 0.05) , "%"), 
+           las = 1 , col= "red"  , col.axis = "red" )
+      
+      ##New ylabel (costs)
+      mtext("Costs (%)", side =  4, 
+            line = 3.8, col = "red")  #source: https://stackoverflow.com/questions/6142944/how-can-i-plot-with-2-different-y-axes
+      
+      ##add a legend
+      legend("topright", legend = c("Returns", "Costs"), col = c("#288ba8", "red"),
+             pch = 20,) #pch = 20 -- > full dots
+      
+      
+      ##3.8 Plot line of cumulated rets   
       plot(x = date_axes, y = cumu_sum_ret, type = "l", xaxt = "n", yaxt = "n" ,  
-           ylim = c(-50,50), ylab = "percentage", xlab = "Dates") #rets
+           ylim = c(-50,50), ylab = "Returns (%)", xlab = "Dates",
+           col ="#288ba8" ) 
+      
+      ##x-axis (1)
       axis.Date(1, at = seq(date_axes[1], date_axes[length(date_axes)] , "6 months") , 
                 labels = T, format = "%m/%Y", tcl = -0.5) #add an axes with dates 
-      legend("topright", legend = c("Cumulative returns"), 
-             col = c("black"), lwd = 2)
-      axis(2, at = seq(-50,50, by = 10), labels = paste0( seq(-50,50, by = 10) , "%"), 
-           las = 1 ) #to write horizaontally 
+      
+      ##Legend
+      legend("topright", legend = c( "Cumulative returns"), 
+             col = c("#288ba8"), lwd = 2)
+      
+      ##y-axis (2)
+      axis(2, at =  seq(-50,50, by = 10), labels = paste0( seq(-50,50, by = 10) , "%") , 
+           las = 1)
       
       ##Main
       title( paste0(input$pillar, input$quartile , " " ,"quartile portfolio") ,
@@ -310,4 +390,3 @@ server <- function(input, output){
 ##1.3: Run the application --------------------------------------------------------
 
 shinyApp(ui = ui , server = server)
-
