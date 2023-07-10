@@ -1,4 +1,4 @@
-
+##1 Call the useful library
 library(lubridate)
 library(readxl)
 library(purrr)
@@ -9,7 +9,9 @@ library(knitr)      #for tables
 library(moments)
 library(docstring)
 
-##Files 
+##2 Files import 
+##The files were already saved in .xlsx format with all the data ready to be run. This process
+##saved time and RAM memory to makes the process faster. 
 sd_ENV_app <- read_xlsx("sd_ENV.xlsx")
 sd_ESG_app <- read_xlsx("sd_ESG.xlsx")
 sd_SOCIAL_app <- read_xlsx("sd_SOCIAL.xlsx")
@@ -21,13 +23,14 @@ prices_close_month_app <- read_xlsx("prices_close_month_app.xlsx")
 bid_month_app <- read_xlsx("bid_month_app.xlsx")
 ask_month_app <- read_xlsx("ask_month_app.xlsx")
 
+##3 Set the colnames()
 sub <- substr( colnames(bid_month_app), start = 1, stop =7 )
 colnames(bid_month_app) <- sub
 colnames(ask_month_app) <- sub
 colnames(prices_open_month_app) <- sub
 colnames(prices_close_month_app) <- sub
 
-#7 Quartile functions 
+##4 Quartile functions 
 stocks_upper_quartiles <- function(data, n = 6) {
   
   df <- as.data.frame( matrix(nrow = nrow(data), ncol = ncol(data)))
@@ -137,10 +140,7 @@ middle_quart_selector <- function(df){
   #end of function 
 }
 
-
-
-
-
+##5 trade analysis function 
 trade_analysis <- function(
     quartile = c("upper", "lower", "middle"), pillar = c("ESG", "ENV" , "SOCIAL", "GOV")
 ){ 
