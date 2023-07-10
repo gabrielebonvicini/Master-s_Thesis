@@ -144,7 +144,7 @@ middle_quart_selector <- function(df){
 trade_analysis <- function(
     quartile = c("upper", "lower", "middle"), pillar = c("ESG", "ENV" , "SOCIAL", "GOV")
 ){ 
- 
+  
   ##1 If-else to decide the dataframe to use
   ##Choose the pillar
   if(pillar == "ESG"){ df <- sd_ESG_app } 
@@ -322,4 +322,3 @@ trade_analysis <- function(
                 returns_perce = total_percentage, returns_dollar = total_ret_money) )
   ##End of function 
 }
-
