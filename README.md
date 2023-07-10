@@ -19,5 +19,5 @@ The code used to built the shiny app is deployed in app.R and help.R files.
 # Useful links 
 | File name | Link  |
 | :-------: | :---: |
-|Shiny app  |  [https://gabrielebonvicini.shinyapps.io/trade_cost_analysis/](https://gabrielebonvicini.shinyapps.io/trade_cost_analysis/ "SHINY APP") |
-|LinkedIn   |  [My LinkedIn](https://www.linkedin.com/in/gabriele-bonvicini-2a3ab9223/ "Gabriele Bonvicini")
+|Shiny app  |  [Shiny App](https://gabrielebonvicini.shinyapps.io/trade_cost_analysis/ "SHINY APP") |
+|LinkedIn   |  [My LinkedIn](https://www.linkedin.com/in/gabriele-bonvicini-2a3ab9223/ "Gabriele Bonvicini LinkedIn")
