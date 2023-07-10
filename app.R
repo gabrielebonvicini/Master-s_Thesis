@@ -1,18 +1,15 @@
-
+##To call the functions and data needed within the application 
 source("help.R")
 
 
 #### write here all the necessary functions and data #### 
 
-#p_rank_app <- read_xlsx("p_rank_app.xlsx")
-#####
 
-
-#Section 8: Shiny application -----------------------------------------------------
+#Section 1: Shiny application -----------------------------------------------------
 
 ##In this section a Shiny application to automatize the results will be created
 
-##8.1: UI ---------------------------------------------------------
+##1.1: UI ---------------------------------------------------------
 
 ui <- fluidPage(
   ##1 Main and subtitle 
@@ -47,7 +44,7 @@ ui <- fluidPage(
   ##End of fluid page
 )
 
-##8.2: Server ----------------------------------------------------------------
+##1.2: Server ----------------------------------------------------------------
 
 server <- function(input, output){ 
   
@@ -314,15 +311,7 @@ server <- function(input, output){
   ##End of server()  
 }
 
-##8.3: Run the application --------------------------------------------------------
+##1.3: Run the application --------------------------------------------------------
 
 shinyApp(ui = ui , server = server)
-
-
-
-#rsconnect::setAccountInfo(name='gabrielebonvicini',
- #                         token='0AFD96FEDFC2500035BEE4B1EBBA3C96',
-  #                        secret='XVkz66uaTdlUTtZ5c7di3Ojw+H4azebd0JcQzq3c')
-
-#rsconnect::deployApp()
 
